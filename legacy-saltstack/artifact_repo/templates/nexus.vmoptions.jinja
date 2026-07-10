@@ -1,0 +1,10 @@
+# Managed by Salt — do not edit by hand.
+# srv/salt/artifact_repo/templates/nexus.vmoptions.jinja
+-Xms{{ pillar['nexus']['min_heap'] }}
+-Xmx{{ pillar['nexus']['max_heap'] }}
+-XX:MaxDirectMemorySize=2G
+-XX:+UnlockDiagnosticVMOptions
+-XX:+UseG1GC
+-Djava.net.preferIPv4Stack=true
+-Dkaraf.data={{ pillar['nexus']['data_dir'] }}
+-Dkaraf.log={{ pillar['nexus']['data_dir'] }}/log

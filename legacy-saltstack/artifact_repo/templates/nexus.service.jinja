@@ -1,0 +1,16 @@
+# Managed by Salt — do not edit by hand.
+# srv/salt/artifact_repo/templates/nexus.service.jinja
+[Unit]
+Description=Nexus Repository Manager
+After=network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+ExecStart={{ pillar['nexus']['install_dir'] }}/bin/nexus start
+ExecStop={{ pillar['nexus']['install_dir'] }}/bin/nexus stop
+User={{ pillar['nexus']['service_user'] }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
