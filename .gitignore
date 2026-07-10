@@ -1,0 +1,21 @@
+# Secrets — never commit
+*.pem
+*.key
+*.p12
+.env
+.env.*
+
+# Editor artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Local pillar overrides (environment-specific, never committed)
+pillar/*/local.sls
+*_secrets.sls
