@@ -1,0 +1,15 @@
+# Managed by Salt — do not edit by hand.
+# srv/salt/directory_services/templates/db.ldif.jinja
+# Applied once via `ldapmodify -Y EXTERNAL` against cn=config to point the
+# default backend database at this fleet's suffix and root DN.
+
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: {{ pillar['directory_services']['base_dn'] }}
+-
+replace: olcRootDN
+olcRootDN: {{ pillar['directory_services']['root_dn'] }}
+-
+replace: olcRootPW
+olcRootPW: {{ pillar['directory_services']['root_pw_hash'] }}

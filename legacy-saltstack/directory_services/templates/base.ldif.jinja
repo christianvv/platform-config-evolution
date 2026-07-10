@@ -1,0 +1,21 @@
+# Managed by Salt — do not edit by hand.
+# srv/salt/directory_services/templates/base.ldif.jinja
+# Base DIT: top-level entry, organizational units, and the admin group.
+
+{% set base_dn = pillar['directory_services']['base_dn'] %}
+dn: {{ base_dn }}
+objectClass: dcObject
+objectClass: organization
+o: {{ pillar['directory_services']['organization'] }}
+dc: {{ base_dn.split(',')[0].split('=')[1] }}
+
+{% for ou in pillar['directory_services']['suffix_ous'] %}
+dn: ou={{ ou }},{{ base_dn }}
+objectClass: organizationalUnit
+ou: {{ ou }}
+
+{% endfor %}
+dn: cn={{ pillar['directory_services']['admin_group'] }},ou=groups,{{ base_dn }}
+objectClass: groupOfNames
+cn: {{ pillar['directory_services']['admin_group'] }}
+member: {{ pillar['directory_services']['root_dn'] }}
