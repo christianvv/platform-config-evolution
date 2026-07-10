@@ -1,0 +1,26 @@
+# Managed by Salt — do not edit by hand.
+# srv/salt/monitoring/templates/devops_hosts.cfg.jinja
+# One host definition per minion in the DevOps tooling fleet, resolved by
+# hostname via internal DNS rather than a hardcoded IP, plus one NRPE-backed
+# service definition per check declared in pillar.
+
+{% for host in pillar['monitoring']['monitored_hosts'] %}
+define host {
+    use                     linux-server
+    host_name               {{ host['hostname'] }}
+    alias                   {{ host['alias'] }}
+    address                 {{ host['hostname'] }}
+}
+
+{% for check in host['checks'] %}
+define service {
+    use                     generic-service
+    host_name               {{ host['hostname'] }}
+    service_description     {{ check }}
+    check_command            check_nrpe!{{ check }}
+    notification_period      {{ pillar['monitoring']['notification_period'] }}
+    check_interval           {{ pillar['monitoring']['check_interval_minutes'] }}
+}
+
+{% endfor %}
+{% endfor %}
