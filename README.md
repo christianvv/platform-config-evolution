@@ -30,14 +30,37 @@ platform-config-evolution/
 │   │   ├── source_control/
 │   │   ├── artifact_repo/
 │   │   ├── directory_services/
+│   │   ├── cicd_runner/
 │   │   └── monitoring/
 │   ├── source_control/             # GitLab (native)
 │   ├── artifact_repo/              # Nexus Repository Manager (native)
 │   ├── directory_services/         # LDAP (native)
-│   ├── monitoring/                 # Monitoring stack (native)
-│   └── cicd_runner/                # Docker + GitLab Runner
+│   ├── cicd_runner/                # Docker + GitLab Runner (Docker executor)
+│   └── monitoring/                 # Nagios Core (native)
 └── modern-kubernetes/               ← Part 2 (coming soon)
 ```
+
+---
+
+## Skills Demonstrated
+
+### Legacy (SaltStack era)
+
+- Standard Salt state tree + pillar structure, with `top.sls` and
+  `pillar/top.sls` mirroring each other to scope each minion to exactly the
+  state module and pillar data its own role needs
+- Native (non-containerized) service management driven by pillar-parameterized
+  Jinja templates, with `watch`/`onchanges` restarts instead of unconditional
+  service bounces
+- Idempotent one-time operations (LDAP DIT loading, CI/CD runner
+  registration) guarded by `unless`/`creates` rather than re-run on every
+  apply
+- A deliberate architecture boundary between Salt-managed infrastructure
+  (the Docker daemon, GitLab Runner itself) and runner-managed, ephemeral
+  per-job containers — using containerization for job isolation without
+  making the whole fleet container-native
+
+### Modern (Kubernetes era) — coming soon
 
 ---
 
