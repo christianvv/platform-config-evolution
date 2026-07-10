@@ -3,6 +3,9 @@
 # registration token would live in an encrypted pillar (GPG), not plaintext.
 
 gitlab_runner:
+  package_name: gitlab-runner
+  repo_baseurl: https://packages.gitlab.com/runner/gitlab-runner/el/7/$basearch
+  repo_gpgkey: https://packages.gitlab.com/gpg.key
   gitlab_url: https://gitlab.example.com
   registration_token: CHANGE_ME_PLACEHOLDER_TOKEN
   executor: docker
