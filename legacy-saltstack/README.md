@@ -172,9 +172,11 @@ its official repo, adds the runner's service user to the `docker` group
 (via `optional_groups`, so it doesn't clobber other group membership the
 package may have set), and registers the runner non-interactively with
 `--executor docker`, driven entirely by pillar (GitLab URL, registration
-token, default image, tags). Registration is guarded by checking for the
-GitLab URL already present in `config.toml`, so re-applying the state
-doesn't re-register the runner.
+token, default image, tags). Because GitLab Runner's own registration
+command isn't idempotent on its own, this state's registration step is
+guarded by checking whether the GitLab URL is already present in
+`config.toml` — a workaround for a known gap rather than a built-in
+GitLab Runner feature.
 
 ---
 
@@ -223,8 +225,14 @@ already-provisioned instances. The following are out of scope and covered
 elsewhere (or not covered in this portfolio at all):
 
 - EC2 instance provisioning, networking, and IAM — `legacy-salt-cloud`
-- The Salt master's own configuration and the secondary Salt master
-  (`devops-saltmaster-02`) used for failover
+- The Salt master's own configuration. This same master doubled as both
+  the salt-cloud provisioning master (see `legacy-salt-cloud` in the
+  companion repo) and the configuration management master for this
+  five-server fleet. A separate, independent Salt master ran in a
+  different VPC managing a larger application environment entirely —
+  out of scope for this repo. A second master for this specific
+  environment was discussed as the fleet grew, but was never
+  implemented; it wasn't warranted at this scale.
 - TLS certificate issuance (states reference certificate paths but do not
   generate or rotate certificates)
 - The ephemeral, per-job Docker containers GitLab Runner creates at CI/CD
