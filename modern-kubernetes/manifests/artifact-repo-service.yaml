@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: artifact-repo
+  namespace: devops-tools
+spec:
+  selector:
+    app: artifact-repo
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: NodePort
