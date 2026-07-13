@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source-control
+  namespace: devops-tools
+  labels:
+    app: source-control
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: source-control
+  template:
+    metadata:
+      labels:
+        app: source-control
+    spec:
+      containers:
+        - name: source-control
+          image: "gitea/gitea:1.26.4"
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
