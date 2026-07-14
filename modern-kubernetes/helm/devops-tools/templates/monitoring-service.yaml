@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitoring
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: monitoring
+  ports:
+    - port: {{ .Values.monitoring.servicePort }}
+      targetPort: {{ .Values.monitoring.containerPort }}
+  type: NodePort
