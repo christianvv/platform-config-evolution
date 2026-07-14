@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: artifact-repo
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: artifact-repo
+  ports:
+    - port: {{ .Values.artifactRepo.servicePort }}
+      targetPort: {{ .Values.artifactRepo.containerPort }}
+  type: NodePort

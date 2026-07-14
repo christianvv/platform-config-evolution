@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artifact-repo
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: artifact-repo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: artifact-repo
+  template:
+    metadata:
+      labels:
+        app: artifact-repo
+    spec:
+      containers:
+        - name: artifact-repo
+          image: "{{ .Values.artifactRepo.image.repository }}:{{ .Values.artifactRepo.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.artifactRepo.containerPort }}
+          resources:
+            requests:
+              cpu: {{ .Values.artifactRepo.resources.requests.cpu }}
+              memory: {{ .Values.artifactRepo.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.artifactRepo.resources.limits.cpu }}
+              memory: {{ .Values.artifactRepo.resources.limits.memory }}
