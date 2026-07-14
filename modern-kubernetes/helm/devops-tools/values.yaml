@@ -1,0 +1,75 @@
+# Default values for devops-tools.
+namespace: devops-tools
+
+sourceControl:
+  image:
+    repository: gitea/gitea
+    tag: "1.26.4"
+  containerPort: 3000
+  servicePort: 80
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+artifactRepo:
+  image:
+    repository: registry
+    tag: "3.1.1"
+  containerPort: 5000
+  servicePort: 5000
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+directoryServices:
+  image:
+    repository: osixia/openldap
+    tag: "1.5.0"
+  containerPort: 389
+  servicePort: 389
+  ldapOrganisation: "Example Org"
+  ldapDomain: "example.org"
+  ldapAdminSecretName: ldap-admin-secret
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+cicdRunner:
+  image:
+    repository: gitlab/gitlab-runner
+    tag: "v19.1.1"
+  ciServerUrl: "http://source-control.devops-tools.svc.cluster.local"
+  gitlabRunnerSecretName: gitlab-runner-secret
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+monitoring:
+  image:
+    repository: prom/prometheus
+    tag: "v3.13.1"
+  containerPort: 9090
+  servicePort: 9090
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
