@@ -1,0 +1,9 @@
+apiVersion: v2
+name: devops-tools
+description: >-
+  DevOps tooling suite: source control, artifact repo, directory services, CI/CD runner,
+  and monitoring
+type: application
+version: 0.1.0
+# appVersion omitted — this chart deploys multiple distinct applications,
+# not a single versioned app, so a single appVersion field wouldn't be meaningful.
