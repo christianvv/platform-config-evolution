@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: directory-services
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: directory-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: directory-services
+  template:
+    metadata:
+      labels:
+        app: directory-services
+    spec:
+      containers:
+        - name: directory-services
+          image: "{{ .Values.directoryServices.image.repository }}:{{ .Values.directoryServices.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.directoryServices.containerPort }}
+          env:
+            - name: LDAP_ORGANISATION
+              value: {{ .Values.directoryServices.ldapOrganisation | quote }}
+            - name: LDAP_DOMAIN
+              value: {{ .Values.directoryServices.ldapDomain | quote }}
+            - name: LDAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.directoryServices.ldapAdminSecretName }}
+                  key: admin-password
+          resources:
+            requests:
+              cpu: {{ .Values.directoryServices.resources.requests.cpu }}
+              memory: {{ .Values.directoryServices.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.directoryServices.resources.limits.cpu }}
+              memory: {{ .Values.directoryServices.resources.limits.memory }}

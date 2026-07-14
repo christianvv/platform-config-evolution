@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: directory-services
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: directory-services
+  ports:
+    - port: {{ .Values.directoryServices.servicePort }}
+      targetPort: {{ .Values.directoryServices.containerPort }}
+  type: NodePort
