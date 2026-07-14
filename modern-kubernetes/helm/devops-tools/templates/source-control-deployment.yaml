@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source-control
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: source-control
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: source-control
+  template:
+    metadata:
+      labels:
+        app: source-control
+    spec:
+      containers:
+        - name: source-control
+          image: "{{ .Values.sourceControl.image.repository }}:{{ .Values.sourceControl.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.sourceControl.containerPort }}
+          resources:
+            requests:
+              cpu: {{ .Values.sourceControl.resources.requests.cpu }}
+              memory: {{ .Values.sourceControl.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.sourceControl.resources.limits.cpu }}
+              memory: {{ .Values.sourceControl.resources.limits.memory }}
