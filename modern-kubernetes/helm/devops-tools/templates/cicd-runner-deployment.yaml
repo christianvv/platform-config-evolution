@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-runner
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: cicd-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cicd-runner
+  template:
+    metadata:
+      labels:
+        app: cicd-runner
+    spec:
+      containers:
+        - name: cicd-runner
+          image: "{{ .Values.cicdRunner.image.repository }}:{{ .Values.cicdRunner.image.tag }}"
+          env:
+            - name: CI_SERVER_URL
+              value: {{ .Values.cicdRunner.ciServerUrl | quote }}
+            - name: REGISTRATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.cicdRunner.gitlabRunnerSecretName }}
+                  key: registration-token
+          resources:
+            requests:
+              cpu: {{ .Values.cicdRunner.resources.requests.cpu }}
+              memory: {{ .Values.cicdRunner.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.cicdRunner.resources.limits.cpu }}
+              memory: {{ .Values.cicdRunner.resources.limits.memory }}
