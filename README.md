@@ -123,11 +123,12 @@ refactor into a parameterized Helm chart (`helm/devops-tools/`) — the same
 evolutionary pattern as the companion Terraform repo's module refactor.
 Each legacy tool maps to a real, lightweight, genuinely representative
 Kubernetes-native equivalent (GitLab → Gitea, Nexus → Docker Registry,
-OpenLDAP stays OpenLDAP, GitLab Runner stays GitLab Runner, and Nagios →
-Prometheus as a deliberate architectural evolution rather than a like-for-like
-swap). The CI/CD runner workload is an intentionally non-functional
-placeholder — it runs the real GitLab Runner image but doesn't register,
-and that scope boundary is documented rather than hidden.
+OpenLDAP retained as OpenLDAP, GitLab Runner retained as GitLab Runner,
+and Nagios → Prometheus as a deliberate architectural evolution rather
+than a like-for-like swap). The CI/CD runner workload is an intentionally
+non-functional placeholder — it runs the real GitLab Runner image but
+doesn't register, and that scope boundary is documented rather than
+hidden.
 
 See [`modern-kubernetes/README.md`](modern-kubernetes/README.md) for the
 full architecture walkthrough and usage guide for both phases.
