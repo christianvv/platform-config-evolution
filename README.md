@@ -2,6 +2,7 @@
 
 ![SaltStack](https://img.shields.io/badge/SaltStack-2D4A6E?style=flat&logo=saltproject&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-0F1689?style=flat&logo=helm&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat)
 
 A portfolio repository documenting the evolution of platform configuration
@@ -37,7 +38,21 @@ platform-config-evolution/
 │   ├── directory_services/         # LDAP (native)
 │   ├── cicd_runner/                # Docker + GitLab Runner (Docker executor)
 │   └── monitoring/                 # Nagios Core (native)
-└── modern-kubernetes/               ← Part 2 (coming soon)
+└── modern-kubernetes/               ← Part 2
+    ├── README.md
+    ├── manifests/                   # Phase A — raw manifests
+    │   ├── namespace.yaml
+    │   ├── source-control-{deployment,service}.yaml     # Gitea
+    │   ├── artifact-repo-{deployment,service}.yaml       # Docker Registry
+    │   ├── directory-services-{deployment,service}.yaml  # OpenLDAP
+    │   ├── cicd-runner-deployment.yaml                   # GitLab Runner
+    │   ├── monitoring-{deployment,service}.yaml          # Prometheus
+    │   └── secrets.example.yaml
+    └── helm/devops-tools/            # Phase B — Helm chart
+        ├── Chart.yaml
+        ├── values.yaml
+        ├── secrets.example.yaml
+        └── templates/
 ```
 
 ---
@@ -60,7 +75,26 @@ platform-config-evolution/
   per-job containers — using containerization for job isolation without
   making the whole fleet container-native
 
-### Modern (Kubernetes era) — coming soon
+### Modern (Kubernetes era)
+
+- Namespace-based logical isolation for the fleet, with Deployment + Service
+  pairing and correct label selector matching (`matchLabels` /
+  `template.labels`) on every workload
+- NodePort Services for local-cluster access, including a deliberate port
+  remap (source-control: `servicePort` 80 → `containerPort` 3000) alongside
+  workloads where the two intentionally match
+- Kubernetes Secrets for sensitive values (LDAP admin password, GitLab
+  Runner registration token), created imperatively and never committed —
+  referenced via `secretKeyRef`, distinct from plain `env` values
+- Explicit `resources.requests`/`resources.limits` on every container, and
+  pinned, verified image tags throughout (no `latest`)
+- The same two-phase evolutionary pattern as the companion Terraform repo's
+  module refactor: raw manifests first, then a parameterized Helm chart
+  with centralized `values.yaml`, verified via `helm template` before any
+  cluster interaction
+- Honest architectural scoping — a deliberate Nagios-to-Prometheus
+  evolution (not a like-for-like swap) and an intentionally non-functional
+  CI/CD runner placeholder, documented as such rather than hidden or faked
 
 ---
 
@@ -78,20 +112,40 @@ design walkthrough.
 
 ---
 
-## Part 2 — Modern: Kubernetes (coming soon)
+## Part 2 — Modern: Kubernetes
 
-A future rebuild of the same tool suite as containerized Kubernetes
-workloads — first as raw manifests, then refactored into a Helm chart.
-Not started yet.
+Located in [`modern-kubernetes/`](modern-kubernetes/).
+
+A rebuild of the same five-tool fleet as containerized Kubernetes
+workloads, built in two phases: raw manifests first (`manifests/`), proving
+each workload functions as a flat set of Kubernetes objects, then a
+refactor into a parameterized Helm chart (`helm/devops-tools/`) — the same
+evolutionary pattern as the companion Terraform repo's module refactor.
+Each legacy tool maps to a real, lightweight, genuinely representative
+Kubernetes-native equivalent (GitLab → Gitea, Nexus → Docker Registry,
+OpenLDAP stays OpenLDAP, GitLab Runner stays GitLab Runner, and Nagios →
+Prometheus as a deliberate architectural evolution rather than a like-for-like
+swap). The CI/CD runner workload is an intentionally non-functional
+placeholder — it runs the real GitLab Runner image but doesn't register,
+and that scope boundary is documented rather than hidden.
+
+See [`modern-kubernetes/README.md`](modern-kubernetes/README.md) for the
+full architecture walkthrough and usage guide for both phases.
 
 ---
 
 ## Repository notes
 
-All configuration values in this repository are illustrative. No real
-hostnames, IP addresses, credentials, or internal program identifiers are
-included. This is a demonstration of architecture and design, rebuilt
-generically from memory and design knowledge — not a copy of production code.
+Both parts are now complete. `legacy-saltstack/` is a recreation of an
+architecture originally designed and built circa 2016–2018, rebuilt
+generically from memory and design knowledge — not a copy of production
+code, and all configuration values (URLs, DNs, tokens, hashes) are
+illustrative placeholders. `modern-kubernetes/` is an original
+implementation built and tested end-to-end against a local cluster
+(`helm template`, `helm install`, verified Pod/Service status). No real
+hostnames, IP addresses, credentials, or internal program identifiers
+appear anywhere in either part, and the two Kubernetes Secrets it depends
+on are created imperatively and never committed to any file.
 
 ---
 
