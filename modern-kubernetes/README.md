@@ -126,6 +126,19 @@ directly.
 
 ---
 
+## Continuous integration
+
+Both phases in this directory are validated automatically on every push and
+pull request via GitHub Actions
+(`.github/workflows/validate-k8s.yml`) — see the CI badge on the top-level
+repo README. The workflow runs [kubeconform](https://github.com/yannh/kubeconform)
+against the raw manifests in `manifests/`, and separately runs `helm lint`
+plus kubeconform against the rendered output of `helm template` for the
+chart in `helm/devops-tools/`, catching templating bugs that `helm lint`
+alone might miss. Neither check requires a live cluster.
+
+---
+
 ## Prerequisites
 
 - Minikube (or another local Kubernetes cluster)

@@ -1,5 +1,6 @@
 # Platform Config Evolution
 
+![CI](https://github.com/christianvv/platform-config-evolution/actions/workflows/validate-k8s.yml/badge.svg)
 ![SaltStack](https://img.shields.io/badge/SaltStack-2D4A6E?style=flat&logo=saltproject&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white)
 ![Helm](https://img.shields.io/badge/Helm-0F1689?style=flat&logo=helm&logoColor=white)
@@ -147,6 +148,14 @@ implementation built and tested end-to-end against a local cluster
 hostnames, IP addresses, credentials, or internal program identifiers
 appear anywhere in either part, and the two Kubernetes Secrets it depends
 on are created imperatively and never committed to any file.
+
+**CI scope:** the GitHub Actions workflow (badge above) validates
+`modern-kubernetes/` only — kubeconform against the raw manifests, plus
+`helm lint` and kubeconform against the rendered Helm chart output, on
+every push and pull request. `legacy-saltstack/` is intentionally not
+covered: its state files use Jinja templating and aren't valid YAML on
+their own, so a real check would require rendering them against a live
+Salt master, which is disproportionate for CI on a portfolio repo.
 
 ---
 
